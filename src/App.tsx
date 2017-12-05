@@ -1,24 +1,30 @@
 import * as React from 'react';
 import './App.css';
+const firebase = require('firebase');
+require('firebase/firestore');
+import Login from './Login';
 
-const logo = require('./logo.svg');
+const config = {
+  apiKey: 'AIzaSyCjfk3xda-w-G9NsSzVmRBU8w9Wt8-Urzc',
+  authDomain: 'livelist.firebaseapp.com',
+  databaseURL: 'https://livelist.firebaseio.com',
+  projectId: 'firebase-livelist',
+  storageBucket: 'firebase-livelist.appspot.com',
+  messagingSenderId: '241612301660'
+};
+firebase.initializeApp(config);
+const firestore = firebase.firestore();
 
-class App extends React.Component {
-  buttonClick = () => {
-    console.log('cliced');
-  }
+class App extends React.Component<{}, {}> {
 
   render() {
+    const users = firestore.collection('users');
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <button onClick={this.buttonClick}>Button</button>
+        <Login usersCollection={users} />
       </div>
     );
   }
