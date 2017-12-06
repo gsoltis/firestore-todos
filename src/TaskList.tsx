@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
 import TaskItem, { Task } from './TaskItem';
+import './TaskList.css';
 
 interface Props {
   tasksCollection: firebase.firestore.CollectionReference;
