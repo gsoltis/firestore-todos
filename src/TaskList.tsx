@@ -4,6 +4,8 @@ import TaskItem, { Task } from './TaskItem';
 
 interface Props {
   tasksCollection: firebase.firestore.CollectionReference;
+  user: firebase.User;
+  onError: (e: string) => void;
 }
 
 interface State {
@@ -35,13 +37,12 @@ class TaskList extends React.Component<Props, State> {
               if (i !== -1) {
                 tasks[i] = task;
               }
-              console.log('dirrefert', change);
             }
           }
           this.setState({tasks});
         }, 
         (e: Error) => {
-          console.log('err', e);
+          this.props.onError(e.toString());
         }
     );
 
@@ -71,7 +72,7 @@ class TaskList extends React.Component<Props, State> {
           savingTask: false
         });
       }).catch((e) => {
-        console.error('failed', e);
+        this.props.onError(e.toString());
         this.setState({savingTask: false});
       });
     }
@@ -83,19 +84,16 @@ class TaskList extends React.Component<Props, State> {
     });
   }
 
-  updateTask(id: string) {
-    return (e: React.FormEvent<HTMLInputElement>) => {
-      console.log('checked?', id);
-    };
-  }
-
   render() {
     return (
       <div>
-        <p>this is the task list, it has {this.state.tasks.length} items</p>
+        <p>
+          this is the task list, it has 
+          {this.state.tasks.length} items
+        </p>
         <ul>
           {this.state.tasks.map((task) =>
-            <TaskItem key={task.ref.id} task={task} />
+            <TaskItem key={task.ref.id} task={task} onError={this.props.onError} />
           )}
         </ul>
         <input 

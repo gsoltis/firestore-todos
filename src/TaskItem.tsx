@@ -9,6 +9,7 @@ export type Task = {
 
 interface Props {
   task: Task;
+  onError: (e: string) => void;
 }
 
 interface State {
@@ -36,7 +37,7 @@ class TaskItem extends React.Component<Props, State> {
       ).then(() => {
         this.setState({updating: false});
       }).catch((err: Error) => {
-        console.error('failed to set', err);
+        this.props.onError(err.toString());
       });
     }
   }

@@ -1,22 +1,18 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
 import TaskList from './TaskList';
-
-const userId = 'dMoHrmwhVLuG95J1VhA0';
-
-type User = {
-  id: string,
-  name: string;
-  tasks: firebase.firestore.CollectionReference;
-};
+import LoginForm from './LoginForm';
 
 interface Props {
   usersCollection: firebase.firestore.CollectionReference;
+  auth: firebase.auth.Auth;
+  clearErrors: () => void;
+  onError: (error: string) => void;
 }
 
 interface State {
   loggingIn: boolean;
-  user?: User;
+  user?: firebase.User;
 }
 
 class Login extends React.Component<Props, State> {
@@ -25,57 +21,37 @@ class Login extends React.Component<Props, State> {
     this.state = {
       loggingIn: false,
     };
-  }
-
-  login = () => {
-    if (!this.state.loggingIn && !this.state.user) {
-      this.setState({loggingIn: true});
-      const users = this.props.usersCollection;
-      users
-        .doc(userId)
-        .get()
-        .then((doc) => {
-          const data = doc.data();
-          const user: User = {
-            id: doc.id,
-            name: data.name,
-            tasks: users.doc(doc.id).collection('tasks')
-          };
-          this.setState({
-            user,
-            loggingIn: false
-          });
-        })
-        .catch((e: Error) => {
-          this.setState({loggingIn: false});
-          console.error('failed to log in', e);
-        });
-    }
+    this.props.auth.onAuthStateChanged((user: firebase.User) => {
+      this.setState({user});
+      this.props.clearErrors();
+    });
   }
 
   logout = () => {
-    if (this.state.user) {
-      this.setState({
-        user: undefined
-      });
-    }
+    this.props.auth.signOut();
   }
 
   render() {
-    return (
-      <div>
-        Login (user id: {userId})
-        <button onClick={this.login}>Do it</button>
-        {this.state.user && 
-          <div>
-            <TaskList 
-              tasksCollection={this.state.user.tasks} 
-            />
-            <button onClick={this.logout}>Log out</button>
-          </div>
-        }
-      </div>
-    );
+    if (this.state.user) {
+      const user = this.state.user;
+      const tasks = this.props.usersCollection
+        .doc(user.uid)
+        .collection('tasks');
+      return (
+        <div> 
+          <TaskList 
+            tasksCollection={tasks} 
+            user={user}
+            onError={this.props.onError}
+          />
+          <button onClick={this.logout}>Log out</button>
+        </div>
+      );
+    } else {
+      return (
+        <LoginForm auth={this.props.auth} onError={this.props.onError} />
+      );
+    }
   }
 }
 
