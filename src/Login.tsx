@@ -24,6 +24,9 @@ class Login extends React.Component<Props, State> {
     this.props.auth.onAuthStateChanged((user: firebase.User) => {
       this.setState({user});
       this.props.clearErrors();
+      if (user) {
+        console.log(user.uid);
+      }
     });
   }
 
