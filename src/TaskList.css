@@ -9,3 +9,9 @@ li {
 ul.done li {
   text-decoration: line-through;
 }
+
+fieldset {
+  border: none;
+  padding-left: 55px;
+}
+
