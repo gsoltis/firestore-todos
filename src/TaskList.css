@@ -5,3 +5,7 @@ ul {
 li {
   padding: 5px;
 }
+
+ul.done li {
+  text-decoration: line-through;
+}

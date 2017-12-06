@@ -35,6 +35,17 @@ class TaskItem extends React.Component<Props, State> {
           merge: true
         }
       ).catch((err: Error) => {
+        this.setState({updating: false});
+        this.props.onError(err.toString());
+      });
+    }
+  }
+
+  deleteTask = () => {
+    if (!this.state.updating) {
+      this.setState({updating: true});
+      this.props.task.ref.delete().catch((err: Error) => {
+        this.setState({updating: false});
         this.props.onError(err.toString());
       });
     }
@@ -51,6 +62,13 @@ class TaskItem extends React.Component<Props, State> {
           checked={task.done} 
         />
         {task.title}
+        &nbsp;
+        <button
+          disabled={this.state.updating}
+          onClick={this.deleteTask}
+        >
+          X
+        </button>
     </li>
     );
   }

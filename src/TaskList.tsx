@@ -65,16 +65,16 @@ class TaskList extends React.Component<Props, State> {
   }
 
   render() {
-    const { tasksCollection, onError } = this.props;
+    const { done, tasksCollection, onError } = this.props;
+    const className = done ? 'done' : '';
     return (
       <div>
-        <ul>
+        <ul className={className}>
           {this.state.tasks.map((task) =>
             <TaskItem key={task.ref.id} task={task} onError={onError} />
           )}
         </ul>
-        {!this.props.done && 
-          <AddTask tasksCollection={tasksCollection} onError={onError} />}
+        {!done && <AddTask tasksCollection={tasksCollection} onError={onError} />}
       </div>
     );
   }
