@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
+import './LoginForm.css';
 
 interface CredentialProps {
   label: string;

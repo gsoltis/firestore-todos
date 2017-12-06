@@ -34,9 +34,7 @@ class TaskItem extends React.Component<Props, State> {
         {
           merge: true
         }
-      ).then(() => {
-        this.setState({updating: false});
-      }).catch((err: Error) => {
+      ).catch((err: Error) => {
         this.props.onError(err.toString());
       });
     }

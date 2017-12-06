@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
-import TaskList from './TaskList';
+import MainContent from './MainContent';
 import LoginForm from './LoginForm';
 
 interface Props {
@@ -39,9 +39,8 @@ class Login extends React.Component<Props, State> {
         .collection('tasks');
       return (
         <div> 
-          <TaskList 
+          <MainContent 
             tasksCollection={tasks} 
-            user={user}
             onError={this.props.onError}
           />
           <button onClick={this.logout}>Log out</button>
