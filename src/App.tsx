@@ -48,7 +48,7 @@ class App extends React.Component<{}, State> {
   render() {
     const users = firestore.collection('users');
     return (
-      <div className="App">
+      <div>
         <div className="App-header">
           <h2>Welcome to Firestore Todos</h2>
         </div>
